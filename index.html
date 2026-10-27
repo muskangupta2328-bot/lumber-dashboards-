@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lumber role-based dashboards (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eceeea;--surf:#fafaf7;--ink:#1b2730;--mute:#5b6770;--line:#d3d7d2;--acc:#1f4e5f;--accfg:#fff;--amb:#b98200;--ambbg:#fbefc7;--red:#b83227;--redbg:#f9dcd8;--grn:#2c7a4b;--grnbg:#d9eddf;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12181c;--surf:#1b2329;--ink:#e8ecea;--mute:#98a4ab;--line:#2d373d;--acc:#7cc3d6;--accfg:#0f1a1f;--amb:#f0bd3a;--ambbg:#3a2f0e;--red:#ff8d80;--redbg:#40201d;--grn:#7fd29c;--grnbg:#173323;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12181c;--surf:#1b2329;--ink:#e8ecea;--mute:#98a4ab;--line:#2d373d;--acc:#7cc3d6;--accfg:#0f1a1f;--amb:#f0bd3a;--ambbg:#3a2f0e;--red:#ff8d80;--redbg:#40201d;--grn:#7fd29c;--grnbg:#173323;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 Barlow,system-ui,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:16px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+h1{font:700 24px/1 "Barlow Condensed",Barlow,sans-serif;margin:0}
+.sub{color:var(--mute);font-size:13px}
+.tabs{display:flex;gap:4px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:4px}
+.tabs button{font:600 14px Barlow,sans-serif;border:0;background:none;color:var(--mute);padding:8px 14px;border-radius:6px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--acc);color:var(--accfg)}
+button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.note{font-size:13px;color:var(--mute);border-left:3px solid var(--acc);padding:2px 10px;margin:0 0 14px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:12px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.grid .box{margin:0}
+.num{font:700 34px/1 "Barlow Condensed",Barlow,sans-serif}
+.lbl{font-size:13px;color:var(--mute)}
+h2{font:700 17px/1.2 "Barlow Condensed",Barlow,sans-serif;margin:0 0 8px}
+.bar{height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--grn)}
+.bar i.a{background:var(--amb)}.bar i.r{background:var(--red)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.row:first-of-type{border-top:0}
+.chip{font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.g{background:var(--grnbg);color:var(--grn)}.a{background:var(--ambbg);color:var(--amb)}.r{background:var(--redbg);color:var(--red)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);font-size:14px}
+th{font-weight:600;color:var(--mute);border-top:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.btn{font:600 13px Barlow,sans-serif;border:1px solid var(--acc);background:none;color:var(--acc);padding:6px 12px;border-radius:6px;cursor:pointer}
+.btn.p{background:var(--acc);color:var(--accfg)}
+.lock{font-size:13px;color:var(--mute)}
+a.lk{color:var(--acc);cursor:pointer;text-decoration:underline}
+@media(max-width:560px){.num{font-size:28px}}
+</style></head>
+<body><div class="wrap">
+<header>
+<div><h1>Lumber · Field Productivity</h1><div class="sub">One data layer, three role-tuned home views. Prototype with illustrative data.</div></div>
+<div class="tabs" role="tablist" aria-label="Switch role">
+<button role="tab" data-v="foreman">Foreman</button><button role="tab" data-v="pm">Project Manager</button><button role="tab" data-v="approver">Time Approver</button>
+</div></header>
+
+<section id="foreman" hidden>
+<p class="note">Foreman · North Tower · Today, updated 7:42 AM. Shows hours, never wage rates or dollars.</p>
+<div class="grid">
+<div class="box"><div class="num">32 / 36</div><div class="lbl">Present of assigned</div></div>
+<div class="box"><div class="num" style="color:var(--amb)">2</div><div class="lbl">Late (10+ min after start)</div></div>
+<div class="box"><div class="num" style="color:var(--red)">2</div><div class="lbl">No clock-in (30+ min)</div></div>
+<div class="box"><div class="num">78%</div><div class="lbl">Crew hours used (186 of 240)</div></div>
+</div>
+<div class="box"><h2>Needs attention now</h2><div id="fw"></div>
+<p class="lock">Missing clock-ins appear in the Time Approver queue as missing punches. <a class="lk" data-go="approver">See approver view</a></p></div>
+<div class="box"><h2>Crew hours vs. allocated</h2><div id="fc"></div>
+<p class="lock">Dollar costs and wage rates are restricted for this role. Warnings at 75% (amber) and 90% (red). History is on demand under Reports.</p></div>
+</section>
+
+<section id="pm" hidden>
+<p class="note">Project Manager · Current pay period. Dollar variance is visible here; individual wage rates are not.</p>
+<div class="grid">
+<div class="box"><div class="num">8</div><div class="lbl">Active projects</div></div>
+<div class="box"><div class="num" style="color:var(--red)">2</div><div class="lbl">At risk</div></div>
+<div class="box"><div class="num">+$12,400</div><div class="lbl">Labor variance, all projects</div></div>
+<div class="box"><div class="num">96%</div><div class="lbl">Hours with valid cost code</div></div>
+</div>
+<div class="box"><h2>North Tower: budget vs. actual by cost code</h2>
+<div class="tw"><table><thead><tr><th>Cost code</th><th class="n">Budget</th><th class="n">Actual</th><th class="n">Variance</th><th class="n">%</th><th>Status</th><th class="n">Complete</th><th class="n">Budget used</th></tr></thead><tbody id="pt"></tbody></table></div>
+<p class="lock">Status: green under 5% over budget, amber 5 to 10%, red above 10%. Actuals count approved hours only; $3,800 of North Tower hours are still pending approval.</p></div>
+<div class="box"><h2>Projects needing attention</h2>
+<div class="row"><span>North Tower</span><span class="chip r">+12% labor variance</span></div>
+<div class="row"><span>Harbor Lofts</span><span class="chip a">+7% labor variance</span></div>
+<div class="row"><span>Elm Street Clinic</span><span class="chip g">On budget</span></div></div>
+</section>
+
+<section id="approver" hidden>
+<p class="note">Time Approver · Pay period 20–26 Oct · Payroll cutoff Fri 5 PM. Attendance is one click away, not on the home view.</p>
+<div class="grid">
+<div class="box"><div class="num" id="ap">24</div><div class="lbl">Pending timesheets</div></div>
+<div class="box"><div class="num" id="am">7</div><div class="lbl">Missing punches</div></div>
+<div class="box"><div class="num" id="ao">3</div><div class="lbl">Overtime exceptions</div></div>
+<div class="box"><div class="num" id="au">5</div><div class="lbl">Uncoded hours</div></div>
+</div>
+<div class="box"><h2>Payroll readiness: <span id="rp">50%</span></h2><div class="bar"><i id="rb" style="width:50%"></i></div>
+<div class="row"><span class="lbl" id="rt"></span><button class="btn p" id="bulk">Approve clean timesheets</button></div></div>
+<div class="box"><h2>Exceptions queue</h2><div id="aq"></div>
+<p class="lock">Every edit needs a reason and is logged. The first two rows come from the Foreman’s no-clock-in alerts.</p></div>
+</section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const cls=p=>p>=90?'r':p>=75?'a':'';
+const W=[["Ravi K.","Late, in at 7:12","a"],["Dev M.","Late, in at 7:18","a"],["Anil S.","No clock-in","r"],["Mohit R.","No clock-in","r"]];
+$('#fw').innerHTML=W.map(w=>`<div class="row"><span>${w[0]}</span><span class="chip ${w[2]}">${w[1]}</span></div>`).join('');
+const C=[["Concrete",69,75],["Framing",53,68],["Site prep",26,37],["Electrical",38,60]];
+$('#fc').innerHTML=C.map(c=>{const p=Math.round(c[1]/c[2]*100);return `<div style="margin-bottom:10px"><div class="row" style="border:0;padding:0 0 4px"><span>${c[0]}</span><span class="lbl">${c[1]} / ${c[2]} h · ${p}%</span></div><div class="bar"><i class="${cls(p)}" style="width:${p}%"></i></div></div>`}).join('');
+const P=[["Concrete formwork",48000,55100,50,92],["Rebar",32000,33200,70,70],["MEP rough-in",41000,44300,45,52],["Finishing",20000,19100,30,28]];
+$('#pt').innerHTML=P.map(r=>{const v=r[2]-r[1],p=v/r[1]*100,s=p>10?['r','Red']:p>5?['a','Amber']:['g','Green'];return `<tr><td>${r[0]}</td><td class="n">$${r[1].toLocaleString()}</td><td class="n">$${r[2].toLocaleString()}</td><td class="n">${v>0?'+':'−'}$${Math.abs(v).toLocaleString()}</td><td class="n">${p>0?'+':''}${p.toFixed(1)}%</td><td><span class="chip ${s[0]}">${s[1]}</span></td><td class="n">${r[3]}%</td><td class="n">${r[4]}%</td></tr>`}).join('');
+let S={m:7,o:3,u:5,clean:9,appr:24};
+let Q=[["Anil S.","Tue","m","Missing punch: no clock-in"],["Mohit R.","Tue","m","Missing punch: no clock-in"],["Sana D.","Mon","m","Missing punch: no clock-out"],["Priya N.","Mon","o","Overtime: 11.5 h, not pre-approved"],["Karan T.","Mon","u","Uncoded: 6 h with no cost code"]];
+function ra(){
+const iss=S.m+S.o+S.u;
+$('#am').textContent=S.m;$('#ao').textContent=S.o;$('#au').textContent=S.u;$('#ap').textContent=iss+S.clean;
+const p=Math.round(S.appr/48*100);$('#rp').textContent=p+'%';$('#rb').style.width=p+'%';$('#rb').className=p<60?'r':p<90?'a':'';
+$('#rt').textContent=iss+' open issues · '+S.clean+' clean timesheets ready to approve · '+S.appr+' of 48 approved';
+$('#bulk').disabled=!S.clean;
+$('#aq').innerHTML=Q.length?Q.map((q,i)=>`<div class="row"><span><b>${q[0]}</b> · North Tower · ${q[1]}<br><span class="lbl">${q[3]}</span></span><button class="btn" data-i="${i}">Resolve</button></div>`).join(''):'<p class="lbl">No open exceptions. Approve clean timesheets to reach 100%.</p>';
+}
+$('#aq').onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;const q=Q.splice(+i,1)[0];S[q[2]]--;S.clean++;ra()};
+$('#bulk').onclick=()=>{S.appr+=S.clean;S.clean=0;ra()};
+const V=['foreman','pm','approver'];
+function show(v){if(!V.includes(v))v='foreman';V.forEach(x=>{$('#'+x).hidden=x!==v});document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));try{history.replaceState(null,'','#'+v)}catch(e){}}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+document.querySelectorAll('[data-go]').forEach(a=>a.onclick=()=>show(a.dataset.go));
+ra();show(location.hash.slice(1));
+</script></body></html>
